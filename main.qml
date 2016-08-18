@@ -29,8 +29,6 @@ ApplicationWindow {
                 id:rec
                 width: 100
                 height: 100
-               // color: "red"
-                //anchors.centerIn: parent
                 state: "state1"
 
                 Image {
@@ -46,17 +44,21 @@ ApplicationWindow {
                         AnchorChanges { target: rec; anchors.horizontalCenter: rectangle.horizontalCenter;
                             anchors.verticalCenter: rectangle.verticalCenter;
                         }
+                        PropertyChanges { target: rec; scale: 1.0}
                     },
                     State {
                         name: "state2"
                         PropertyChanges {target: ima; source:  "images/state2.jpg"}
                         AnchorChanges { target: rec; anchors.top: rectangle.top; anchors.left: rectangle.left}
+                        PropertyChanges { target: rec; scale: 1.0}
                     },
                     State {
                         name: "state3"
                         PropertyChanges {target: ima; source:  "images/state3.jpg"}
                         AnchorChanges { target: rec; anchors.right: rectangle.right; anchors.bottom: rectangle.bottom}
+                        PropertyChanges { target: rec; scale: 1.0}
                     }
+
                 ]
 
                 SequentialAnimation {
@@ -121,9 +123,9 @@ ApplicationWindow {
                         to: rectangle.width - 100
                         duration: 2000
                     }
+                }
             }
         }
-  }
 
         GroupBox {
             Layout.fillWidth: true
@@ -132,6 +134,9 @@ ApplicationWindow {
                 Button {
                     text: "Change State"
                     onClicked: {
+                        state1Ani.stop();
+                        state2Ani.stop();
+                        state3Ani.stop();
                         switch (rec.state)
                     {
                         case "state1":
@@ -155,9 +160,6 @@ ApplicationWindow {
                         switch (rec.state)
                         {
                             case "state1":
-//                                console.log("jjj");
-//                                console.log(rec.x);
-                                //console.log(rectangle.horizontalCenter);
                                 state1Ani.running = true;
                                 break;
                             case "state2":
@@ -172,22 +174,32 @@ ApplicationWindow {
                 }
 
                 Button {
-                    text: "Scale"
+                    text: "+"
+                    onClicked: {
+                        if(rec.scale > 1.5 - 0.00001 && rec.scale < 1.5 + 0.00001)
+                        {
+                            console.log("the scale is 1.5");
+                        }
+                         else rec.scale += 0.1;
+                    }
                 }
 
                 Button {
-                    text:"All"
+                    text:"-"
+                    onClicked: {
+                        if(rec.scale > 0.5 - 0.00001 && rec.scale < 0.5 + 0.00001)
+                        {
+                            console.log("the scale is 0.5");
+                        }
+                         else rec.scale -= 0.1;
+                    }
                 }
 
             }
         }
 
 
-
-
-
     }
-
 
 }
 
