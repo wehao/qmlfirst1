@@ -58,41 +58,72 @@ ApplicationWindow {
                         AnchorChanges { target: rec; anchors.right: rectangle.right; anchors.bottom: rectangle.bottom}
                     }
                 ]
-                property int  state1x : 0
-                XAnimator {
-                    id:state1Ani1
-                    target: rec
-                    from:rec.x
-                    to:rectangle.width - 100
-                    duration: 1000
+
+                SequentialAnimation {
+                    id:state1Ani
                     running: false
+                    XAnimator {
+                        target: rec
+                        from: rec.x
+                        to: rectangle.width - 100
+                        duration: 1000
+
+                    }
+
+                    XAnimator {
+                        target: rec
+                        from:rectangle.width -  100
+                        to: 0
+                        duration: 2000
+                    }
+
+                    XAnimator {
+                        target: rec
+                        from: 0
+                        to:rectangle.width/2 - 5 * margin
+                        duration: 1000
+                    }
                 }
 
-                XAnimator {
-                    id:state1Ani2
-                    target: rec
-                    from:rectangle.width - 100
-                    to:rec.x
-                    duration: 1000
+                SequentialAnimation {
+                    id:state2Ani
                     running: false
-                }
+                    XAnimator {
+                        target: rec
+                        from: rec.x
+                        to: rectangle.width - 100
+                        duration: 2000
 
-//                SequentialAnimation {
-//                    id:state1Ani
-//                    running: false
-//                    NumberAnimation {
+                    }
 
-//                        target: rec
-//                        property: "x"
-//                        from: rec.x
-//                        to: rectangle.width - 100
-//                        duration: 1000
-
-//                    }
-//                }
+                    XAnimator {
+                        target: rec
+                        from:rectangle.width -  100
+                        to: 0
+                        duration: 2000
+                    }
             }
 
+                SequentialAnimation {
+                    id:state3Ani
+                    running: false
+                    XAnimator {
+                        target: rec
+                        from: rec.x
+                        to: 0
+                        duration: 2000
+
+                    }
+
+                    XAnimator {
+                        target: rec
+                        from:0
+                        to: rectangle.width - 100
+                        duration: 2000
+                    }
+            }
         }
+  }
 
         GroupBox {
             Layout.fillWidth: true
@@ -126,15 +157,14 @@ ApplicationWindow {
                             case "state1":
 //                                console.log("jjj");
 //                                console.log(rec.x);
-//                                console.log(mainLayout.width);
-                                state1x: rec.x;
+                                //console.log(rectangle.horizontalCenter);
                                 state1Ani.running = true;
                                 break;
                             case "state2":
-                                //rec.state = "state3";
+                               state2Ani.running = true;
                                 break;
                             case "state3":
-                                //rec.state = "state1";
+                               state3Ani.running = true;
                                 break;
                             default:
                          }
@@ -158,4 +188,6 @@ ApplicationWindow {
 
     }
 
+
 }
+
