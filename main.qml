@@ -2,6 +2,7 @@ import QtQuick 2.6
 import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.4
+import QtQml.StateMachine 1.0
 
 ApplicationWindow {
     visible: true
@@ -11,6 +12,8 @@ ApplicationWindow {
     minimumWidth: mainLayout.minimumWidth + 2*margin
     minimumHeight: mainLayout.minimumHeight + 2*margin
     title: qsTr("qmlfirst")
+
+    property int  threeState : 0
 
     ColumnLayout {
         id:mainLayout
@@ -24,13 +27,10 @@ ApplicationWindow {
             Layout.minimumHeight: 400
             color: "black"
 
-
-
             Rectangle  {
                 id:rec
                 width: 100
                 height: 100
-                state: "state1"
 
                 Image {
                     anchors.fill: parent
@@ -38,29 +38,71 @@ ApplicationWindow {
                     source: "images/state1.jpg"
                 }
 
-                states: [
+                StateMachine {
+                    id: stateMachine
+                    initialState: state1
+                    running: true
+
+                    //create state1
                     State {
-                        name: "state1"
-                        PropertyChanges {target: ima; source:  "images/state1.jpg"}
-                        AnchorChanges { target: rec; anchors.horizontalCenter: rectangle.horizontalCenter;
-                            anchors.verticalCenter: rectangle.verticalCenter;
+                        id:state1
+                        SignalTransition {
+                            targetState: state2
+                            signal: stateBtn.clicked
                         }
-                        PropertyChanges { target: rec; scale: 1.0}
-                    },
-                    State {
-                        name: "state2"
-                        PropertyChanges {target: ima; source:  "images/state2.jpg"}
-                        AnchorChanges { target: rec; anchors.top: rectangle.top; anchors.left: rectangle.left}
-                        PropertyChanges { target: rec; scale: 1.0}
-                    },
-                    State {
-                        name: "state3"
-                        PropertyChanges {target: ima; source:  "images/state3.jpg"}
-                        AnchorChanges { target: rec; anchors.right: rectangle.right; anchors.bottom: rectangle.bottom}
-                        PropertyChanges { target: rec; scale: 1.0}
+                        onEntered: {
+                            PropertyChanges : {
+                                    target: rec;
+                                    rec.anchors.horizontalCenter =rectangle.horizontalCenter;
+                                    rec.anchors.verticalCenter = rectangle.verticalCenter;
+                                    rec.scale = 1.0;
+                            }
+                            PropertyChanges :{ target: ima; ima.source =  "images/state1.jpg"}
+                            threeState = 0;
+                        }
                     }
 
-                ]
+                    //create state2
+                    State {
+                        id:state2
+                        SignalTransition {
+                            targetState: state3
+                            signal: stateBtn.clicked
+                        }
+                        onEntered: {
+                            PropertyChanges : {
+                                target: rec;
+                                rec.anchors.horizontalCenter = undefined;
+                                rec.anchors.verticalCenter = undefined;
+                                rec.x = 0;
+                                rec.y = 0;
+                                rec.scale = 1.0;
+                            }
+                            PropertyChanges :{ target: ima; ima.source =  "images/state2.jpg"}
+                            threeState = 1;
+                        }
+                    }
+
+                    //create state3
+                    State {
+                        id:state3
+                        SignalTransition {
+                            targetState: state1
+                            signal: stateBtn.clicked
+                        }
+                        onEntered: {
+                            PropertyChanges : {
+                                target: rec;
+                                rec.x = rectangle.width - rec.width;
+                                rec.y = rectangle.height - rec.height;
+                                rec.scale = 1.0;
+                            }
+                            PropertyChanges :{ target: ima; ima.source =  "images/state3.jpg"}
+                            threeState = 2;
+                        }
+                    }
+
+                }
 
                 SequentialAnimation {
                     id:state1Ani
@@ -115,7 +157,6 @@ ApplicationWindow {
                         from: rec.x
                         to: 0
                         duration: 2000
-
                     }
 
                     XAnimator {
@@ -133,7 +174,9 @@ ApplicationWindow {
             RowLayout {
                 anchors.fill: parent
                 Button {
+                    id:stateBtn
                     implicitWidth: 100
+                    Layout.fillWidth: true
                     text: "Change State"
                     style: ButtonStyle {
                         background: Rectangle {
@@ -152,25 +195,27 @@ ApplicationWindow {
                         state2Ani.stop();
                         state3Ani.stop();
                         switch (rec.state)
-                    {
-                        case "state1":
+                        {
+                            case "state1":
                                 rec.state = "state2";
                                 break;
-                        case "state2":
+                            case "state2":
                                 rec.state = "state3";
                                 break;
-                         case "state3":
+                            case "state3":
                                 rec.state = "state1";
                                 break;
-                         default:
+                            default:
+                        }
                     }
-                    }
-
                 }
 
                 Button {
+                    id: animationBtn
+                    Layout.fillWidth: true
                     implicitWidth: 100
                     text: "Animation"
+
                     style: ButtonStyle {
                         background: Rectangle {
                             color:"#FFEBCD"
@@ -184,15 +229,15 @@ ApplicationWindow {
                         }
                     }
                     onClicked: {
-                        switch (rec.state)
+                        switch (threeState)
                         {
-                            case "state1":
+                            case 0:
                                 state1Ani.running = true;
                                 break;
-                            case "state2":
+                            case 1:
                                state2Ani.running = true;
                                 break;
-                            case "state3":
+                            case 2:
                                state3Ani.running = true;
                                 break;
                             default:
@@ -201,6 +246,8 @@ ApplicationWindow {
                 }
 
                 Button {
+                    id: enlargeBtn
+                    Layout.fillWidth: true
                     implicitWidth: 100
                     text: "+"
                     style: ButtonStyle {
@@ -225,6 +272,8 @@ ApplicationWindow {
                 }
 
                 Button {
+                    id: narrowBtn
+                    Layout.fillWidth: true
                     implicitWidth: 100
                     text:"-"
                     style: ButtonStyle {
@@ -247,12 +296,8 @@ ApplicationWindow {
                          else rec.scale -= 0.1;
                     }
                 }
-
             }
         }
-
-
     }
-
 }
 
