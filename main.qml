@@ -1,6 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.1
+import QtQuick.Controls.Styles 1.4
 
 ApplicationWindow {
     visible: true
@@ -132,7 +133,20 @@ ApplicationWindow {
             RowLayout {
                 anchors.fill: parent
                 Button {
+                    implicitWidth: 100
                     text: "Change State"
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color:"#FFEBCD"
+                            border.width: control.pressed?2:1
+                            border.color: "yellow"
+                            radius: 6
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: control.pressed? "#C1FFC1":"#FFEBCD"}
+                                GradientStop { position: 1; color: control.pressed? "#C0FF3E":"#FFEBCD"}
+                            }
+                        }
+                    }
                     onClicked: {
                         state1Ani.stop();
                         state2Ani.stop();
@@ -155,7 +169,20 @@ ApplicationWindow {
                 }
 
                 Button {
+                    implicitWidth: 100
                     text: "Animation"
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color:"#FFEBCD"
+                            border.width: control.pressed?2:1
+                            border.color: "yellow"
+                            radius: 6
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: control.pressed? "#C1FFC1":"#FFEBCD"}
+                                GradientStop { position: 1; color: control.pressed? "#C0FF3E":"#FFEBCD"}
+                            }
+                        }
+                    }
                     onClicked: {
                         switch (rec.state)
                         {
@@ -174,7 +201,20 @@ ApplicationWindow {
                 }
 
                 Button {
+                    implicitWidth: 100
                     text: "+"
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color:"#FFEBCD"
+                            border.width: control.pressed?2:1
+                            border.color: "yellow"
+                            radius: 6
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: control.pressed? "#C1FFC1":"#FFEBCD"}
+                                GradientStop { position: 1; color: control.pressed? "#C0FF3E":"#FFEBCD"}
+                            }
+                        }
+                    }
                     onClicked: {
                         if(rec.scale > 1.5 - 0.00001 && rec.scale < 1.5 + 0.00001)
                         {
@@ -185,7 +225,20 @@ ApplicationWindow {
                 }
 
                 Button {
+                    implicitWidth: 100
                     text:"-"
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color:"#FFEBCD"
+                            border.width: control.pressed?2:1
+                            border.color: "yellow"
+                            radius: 6
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: control.pressed? "#C1FFC1":"#FFEBCD"}
+                                GradientStop { position: 1; color: control.pressed? "#C0FF3E":"#FFEBCD"}
+                            }
+                        }
+                    }
                     onClicked: {
                         if(rec.scale > 0.5 - 0.00001 && rec.scale < 0.5 + 0.00001)
                         {
